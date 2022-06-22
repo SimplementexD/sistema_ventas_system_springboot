@@ -80,7 +80,7 @@ public class SellController {
 				results.put("product_title",product_details.getProduct_title());
 				results.put("product_price_per_item",product_details.getProduct_price_per_item());
 				results.put("product_description",product_details.getProduct_description());
-				results.put("product_mfd_date",product_details.getProduct_mfd_date());
+				results.put("product_prod_date",product_details.getProduct_prod_date());
 				results.put("product_exp_date",product_details.getProduct_exp_date());
 				results.put("product_company",product_details.getProduct_company());
 				resultArray.add(results);
