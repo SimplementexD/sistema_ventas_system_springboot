@@ -97,7 +97,7 @@ public class ProductController {
 		return ResponseEntity.ok().body(product);
 	}
 
-	//@PostMapping("/products/save")
+
 	@RequestMapping(value = "/producto/guardar", method = RequestMethod.POST)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Product createProduct(@Valid @RequestBody Product product) {
@@ -105,7 +105,7 @@ public class ProductController {
 	}
 	
 
-	//@PutMapping("/products/{id}")
+
 	@RequestMapping(value = "/product", method = RequestMethod.PUT)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Product> updateProduct(@RequestParam(value = "id") Long productId,
@@ -114,7 +114,7 @@ public class ProductController {
 		return ResponseEntity.ok(updatedProduct);
 	}
 
-//	@DeleteMapping("/products")
+
 	@RequestMapping(value = "/product", method = RequestMethod.DELETE)
 	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Boolean> deleteProduct(@RequestParam(value = "id") Long productId) throws ResourceNotFoundException {
