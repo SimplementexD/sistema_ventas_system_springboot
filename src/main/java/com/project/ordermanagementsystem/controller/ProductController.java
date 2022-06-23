@@ -44,19 +44,67 @@ public class ProductController {
     private EntityManager entityManager;
 
 	@GetMapping("/products")
-	public List<Product> getAllProducts() {
+	public List<Product> listarProductos() {
 		return productRepository.findAll();
 	}
+	
+	@GetMapping("/products/{id}")
+	public ResponseEntity<Product> buscarPorId(@PathVariable(value = "id") Long productId)
+			throws ResourceNotFoundException {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
+		return ResponseEntity.ok().body(product);
+	}
 
-	@GetMapping("/products/search/{name}")
-	public List<Product> getProductByName(@PathVariable(value = "name") String productName) {
-			return productRepository.serchUserByName(productName);
+	@GetMapping("/products/search/{code}")
+	public List<Product> buscarPorCodigo(@PathVariable(value = "code") String productName) {
+			return productRepository.serchProductByCode(productName);
 	}
 	
 	@GetMapping("/products/search-state/{state}")
-	public List<Product> serchUserByState(@PathVariable(value = "state") String productState) {
-			return productRepository.serchUserByState(productState);
+	public List<Product> buscarPorEstado(@PathVariable(value = "state") String productState) {
+			return productRepository.serchProductByState(productState);
 	}
+	
+	@RequestMapping(value = "/producto/guardar", method = RequestMethod.POST)
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Product guardar(@Valid @RequestBody Product product) {
+		return productRepository.save(product);
+	}
+	
+	@RequestMapping(value = "/product/actualizar", method = RequestMethod.PUT)
+	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Product actualizar(@Valid @RequestBody Product product) {
+		return productRepository.save(product);
+	}
+	
+//	public ResponseEntity<Product> actualizar(
+//			@RequestParam(value = "id") Long productId,
+//			@Valid @RequestBody Product productDetails) throws ResourceNotFoundException {
+//		
+//		final Product updatedProduct = productRepository.save(productDetails);
+//		return ResponseEntity.ok(updatedProduct);
+//	}
+	
+	@RequestMapping(value = "/product", method = RequestMethod.DELETE)
+	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Boolean> eliminar(@RequestParam(value = "id") Long productId) throws ResourceNotFoundException {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
+
+		productRepository.delete(product);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return response;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping("/products/all-products")
 	public ArrayList getAllProductFields() {
@@ -89,41 +137,7 @@ public class ProductController {
         return resultArray;
 	}
 	
-	@GetMapping("/products/{id}")
-	public ResponseEntity<Product> getProductById(@PathVariable(value = "id") Long productId)
-			throws ResourceNotFoundException {
-		Product product = productRepository.findById(productId)
-				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
-		return ResponseEntity.ok().body(product);
-	}
-
-
-	@RequestMapping(value = "/producto/guardar", method = RequestMethod.POST)
-	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Product createProduct(@Valid @RequestBody Product product) {
-		return productRepository.save(product);
-	}
 	
 
-
-	@RequestMapping(value = "/product", method = RequestMethod.PUT)
-	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Product> updateProduct(@RequestParam(value = "id") Long productId,
-			@Valid @RequestBody Product productDetails) throws ResourceNotFoundException {
-		final Product updatedProduct = productRepository.save(productDetails);
-		return ResponseEntity.ok(updatedProduct);
-	}
-
-
-	@RequestMapping(value = "/product", method = RequestMethod.DELETE)
-	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE,  consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Boolean> deleteProduct(@RequestParam(value = "id") Long productId) throws ResourceNotFoundException {
-		Product product = productRepository.findById(productId)
-				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
-
-		productRepository.delete(product);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
-	}
+	
 }
